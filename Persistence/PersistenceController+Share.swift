@@ -93,16 +93,14 @@ extension PersistenceController: UICloudSharingControllerDelegate {
      - A participant removes themselves from a share by tapping the Remove Me button in UICloudSharingController.
      
      After stopping the sharing,  purge the zone or just wait for an import to update the local store.
-     This sample chooses to purge the zone to avoid stale UI. That triggers a "zone not found" error because UICloudSharingController
-     deletes the zone, but the error doesn't really matter in this context.
+     This sample chooses to purge the zone to avoid stale UI. That triggers a "zone not found" error because UICloudSharingController deletes the zone, but the error doesn't really matter in this context.
      
      Purging the zone has a caveat:
      - When sharing an object from the owner side, Core Data moves the object to the shared zone.
      - When calling purgeObjectsAndRecordsInZone, Core Data removes all the objects and records in the zone.
      To keep the objects, deep copy the object graph you want to keep and make sure no object in the new graph is associated with any share.
      
-     The purge API posts an NSPersistentStoreRemoteChange notification after finishing its job, so observe the notification to update
-     the UI, if necessary.
+     The purge API posts an NSPersistentStoreRemoteChange notification after finishing its job, so observe the notification to update the UI, if necessary.
      */
     func cloudSharingControllerDidStopSharing(_ csc: UICloudSharingController) {
         if let share = csc.share {
@@ -150,8 +148,7 @@ extension PersistenceController {
                 return
             }
             /**
-             Deduplicate tags, if necessary, because adding a photo to an existing share moves the whole object graph to the associated
-             record zone, which can lead to duplicated tags.
+             Deduplicate tags, if necessary, because adding a photo to an existing share moves the whole object graph to the associated record zone, which can lead to duplicated tags.
              */
             if existingShare != nil {
                 if let tagObjectIDs = objectIDs?.filter({ $0.entity.name == "Tag" }), !tagObjectIDs.isEmpty {
