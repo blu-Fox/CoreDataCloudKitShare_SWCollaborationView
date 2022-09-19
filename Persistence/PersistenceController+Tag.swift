@@ -4,6 +4,7 @@ See LICENSE folder for this sample’s licensing information.
 Abstract:
 Extensions that wrap the related methods for managing tags.
 */
+// Relates to tags, largely irrelevant for Rostou adoption of Cloudkit sharing
 
 import Foundation
 import CoreData

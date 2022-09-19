@@ -4,6 +4,7 @@ See LICENSE folder for this sample’s licensing information.
 Abstract:
 A SwiftUI view that adds a photo to an existing share.
 */
+#warning("UI: The communication between UI and the container (adding/removing) is the same everywhere. 1) update UI, 2) async function to shareObject or purge, 3) update UI, 4) close sheet")
 
 import SwiftUI
 import CoreData
@@ -27,7 +28,8 @@ struct AddToExistingShareView: View {
             }
         }
     }
-    
+
+    // The communication with the container (adding/removing) is the same everywhere. 1) update UI, 2) async function to shareObject or purge, 3) update UI, 4) close sheet. 0.1 second delay is to allow UI to update, before we execute our logic.
     private func sharePhoto(_ unsharedPhoto: Photo, shareTitle: String?) {
         toggleProgress.toggle()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {

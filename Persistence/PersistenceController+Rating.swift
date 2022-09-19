@@ -4,6 +4,7 @@ See LICENSE folder for this sample’s licensing information.
 Abstract:
 An extension that wraps the related methods for managing ratings.
 */
+// Relates to ratings, largely irrelevant for Rostou adoption of Cloudkit sharing
 
 import Foundation
 import CoreData

@@ -4,6 +4,7 @@ See LICENSE folder for this sample’s licensing information.
 Abstract:
 Extensions that wrap the related methods for sharing.
 */
+#warning("LOGIC: Important functions relating to the creation and deletion of shares and participants.")
 
 import Foundation
 import CoreData
@@ -14,6 +15,8 @@ import CloudKit
 // MARK: - Convenient methods for managing sharing.
 //
 extension PersistenceController {
+
+    // Function to present the cloudsharing controller for a photo, which may or may not be already shared.
     func presentCloudSharingController(photo: Photo) {
         /**
          Grab the share if the photo is already shared.
@@ -39,7 +42,8 @@ extension PersistenceController {
             viewController.present(sharingController, animated: true)
         }
     }
-    
+
+    // Function to present the cloudsharing controller for an existing share, which may or may not contain something.
     func presentCloudSharingController(share: CKShare) {
         let sharingController = UICloudSharingController(share: share, container: cloudKitContainer)
         sharingController.delegate = self
@@ -51,7 +55,8 @@ extension PersistenceController {
             viewController.present(sharingController, animated: true)
         }
     }
-    
+
+    // private function to construct a controller for a photo which is hitherto unshared.
     private func newSharingController(unsharedPhoto: Photo, persistenceController: PersistenceController) -> UICloudSharingController {
         return UICloudSharingController { (_, completion: @escaping (CKShare?, CKContainer?, Error?) -> Void) in
             /**
@@ -73,6 +78,7 @@ extension PersistenceController {
         }
     }
 
+    // helper func to get the window's root view controller and change the UI of the UICloudSharingController
     private var rootViewController: UIViewController? {
         for scene in UIApplication.shared.connectedScenes {
             if scene.activationState == .foregroundActive,
@@ -102,12 +108,14 @@ extension PersistenceController: UICloudSharingControllerDelegate {
      
      The purge API posts an NSPersistentStoreRemoteChange notification after finishing its job, so observe the notification to update the UI, if necessary.
      */
+    // This is important, and possibly needs some revision so that deleting a shared Finding does not also delete it on the owner side. Not yet sure, but maybe we will need to copy the Finding into private database before deleting it from the shared database?
     func cloudSharingControllerDidStopSharing(_ csc: UICloudSharingController) {
         if let share = csc.share {
             purgeObjectsAndRecords(with: share)
         }
     }
 
+  // From the sample description: NSPersistentCloudKitContainer doesn't automatically handle the changes UICloudSharingController (or other CloudKit APIs) makes on a share. Apps must call persistUpdatedShare(_:in:completion:) to save the changes to the Core Data store. The sample app does that by implementing the following UICloudSharingControllerDelegate method:
     func cloudSharingControllerDidSaveShare(_ csc: UICloudSharingController) {
         if let share = csc.share, let persistentStore = share.persistentStore {
             persistentContainer.persistUpdatedShare(share, in: persistentStore) { (share, error) in
@@ -151,15 +159,18 @@ extension PersistenceController {
              Deduplicate tags, if necessary, because adding a photo to an existing share moves the whole object graph to the associated record zone, which can lead to duplicated tags.
              */
             if existingShare != nil {
+                // possibly irrelevant for Rostou
                 if let tagObjectIDs = objectIDs?.filter({ $0.entity.name == "Tag" }), !tagObjectIDs.isEmpty {
                     self.deduplicateAndWait(tagObjectIDs: Array(tagObjectIDs))
                 }
             } else {
+                // No existing share was found, so a new one is configured
                 self.configure(share: share)
             }
             /**
              Synchronize the changes on the share to the private persistent store.
              */
+            // From the sample description: NSPersistentCloudKitContainer doesn't automatically handle the changes UICloudSharingController (or other CloudKit APIs) makes on a share. Apps must call persistUpdatedShare(_:in:completion:) to save the changes to the Core Data store.
             self.persistentContainer.persistUpdatedShare(share, in: self.privatePersistentStore) { (share, error) in
                 if let error = error {
                     print("\(#function): Failed to persist updated share: \(error)")
@@ -184,6 +195,7 @@ extension PersistenceController {
         }
     }
 
+    // Helper func to find a possible share that contains this photo
     func existingShare(photo: Photo) -> CKShare? {
         if let shareSet = try? persistentContainer.fetchShares(matching: [photo.objectID]),
            let (_, share) = shareSet.first {
@@ -191,20 +203,23 @@ extension PersistenceController {
         }
         return nil
     }
-    
+
+    // Helper func to find a possible share by its title
     func share(with title: String) -> CKShare? {
         let stores = [privatePersistentStore, sharedPersistentStore]
         let shares = try? persistentContainer.fetchShares(in: stores)
         let share = shares?.first(where: { $0.title == title })
         return share
     }
-    
+
+    // Helper func to fetch the titles of all shares
     func shareTitles() -> [String] {
         let stores = [privatePersistentStore, sharedPersistentStore]
         let shares = try? persistentContainer.fetchShares(in: stores)
         return shares?.map { $0.title } ?? []
     }
-    
+
+    // Default share configuration
     private func configure(share: CKShare, with photo: Photo? = nil) {
         share[CKShare.SystemFieldKey.title] = "A cool photo"
     }
@@ -218,7 +233,7 @@ extension PersistenceController {
          Use privatePersistentStore directly because only the owner may add participants to a share.
          */
         let lookupInfo = CKUserIdentity.LookupInfo(emailAddress: emailAddress)
-        let persistentStore = privatePersistentStore //share.persistentStore!
+        let persistentStore = privatePersistentStore //share.persistentStore! - not needed bc we know only the owner can do this
 
         persistentContainer.fetchParticipants(matching: [lookupInfo], into: persistentStore) { (results, error) in
             guard let participants = results, let participant = participants.first, error == nil else {
@@ -238,15 +253,19 @@ extension PersistenceController {
             }
         }
     }
-    
+
+    // Logic function to delete a specified participant. Only run when we already know that we have permission to delete participants (i.e. we are OWNER)
     func deleteParticipant(_ participants: [CKShare.Participant], share: CKShare,
                            completionHandler: ((_ share: CKShare?, _ error: Error?) -> Void)?) {
+
+        // delete specified participant(s)
         for participant in participants {
             share.removeParticipant(participant)
         }
         /**
          Use privatePersistentStore directly because only the owner may delete participants to a share.
          */
+        // Persist changes.
         persistentContainer.persistUpdatedShare(share, in: privatePersistentStore) { (share, error) in
             if let error = error {
                 print("\(#function): Failed to persist updated share: \(error)")
@@ -256,6 +275,7 @@ extension PersistenceController {
     }
 }
 
+// Variable informing about the status of a participant's participation
 extension CKShare.ParticipantAcceptanceStatus {
     var stringValue: String {
         return ["Unknown", "Pending", "Accepted", "Removed"][rawValue]
@@ -263,22 +283,28 @@ extension CKShare.ParticipantAcceptanceStatus {
 }
 
 extension CKShare {
+
+    // Variable storing the share's name
     var title: String {
+        // If we have no date, create a unique UUID title.
         guard let date = creationDate else {
             return "Share-\(UUID().uuidString)"
         }
+        // Otherwise, create a name from the date and time of the share creation.
         let formatter = DateFormatter()
         formatter.dateStyle = .short
         formatter.timeStyle = .short
         return "Share-" + formatter.string(from: date)
     }
-    
+
+    // Variable informing about which store the share is in.
     var persistentStore: NSPersistentStore? {
         let persistentContainer = PersistenceController.shared.persistentContainer
         let privatePersistentStore = PersistenceController.shared.privatePersistentStore
         if let shares = try? persistentContainer.fetchShares(in: privatePersistentStore) {
             let zoneIDs = shares.map { $0.recordID.zoneID }
             if zoneIDs.contains(recordID.zoneID) {
+                // Share is in the user's private store - user is OWNER
                 return privatePersistentStore
             }
         }
@@ -286,9 +312,11 @@ extension CKShare {
         if let shares = try? persistentContainer.fetchShares(in: sharedPersistentStore) {
             let zoneIDs = shares.map { $0.recordID.zoneID }
             if zoneIDs.contains(recordID.zoneID) {
+                // Share is in the user's shared store - user is PARTICIPANT
                 return sharedPersistentStore
             }
         }
+        // Share is in neither store, or we failed to find it (or the store)
         return nil
     }
 }

@@ -4,6 +4,7 @@ See LICENSE folder for this sample’s licensing information.
 Abstract:
 A SwiftUI view that manages a photo collection.
 */
+#warning("UI: We show multiple records here, so it's good to merge possible incoming transactions")
 
 import SwiftUI
 import CoreData
@@ -96,6 +97,7 @@ struct PhotoGridView: View {
 
         }
         .navigationViewStyle(.stack)
+        // Listen to store changes
         .onReceive(NotificationCenter.default.storeDidChangePublisher) { notification in
             processStoreChangeNotification(notification)
         }
@@ -153,7 +155,7 @@ struct PhotoGridView: View {
              Reserve this case for something like CloudSharingSheet(activeSheet: $activeSheet, share: share).
              */
             EmptyView()
-        case .managingSharesView:
+        case .managingSharesView: // custom view for watchOS, because UICloudSharingController is iOS only
             ManagingSharesView(activeSheet: $activeSheet, nextSheet: $nextSheet)
 
         case .sharePicker(let photo):
@@ -165,7 +167,7 @@ struct PhotoGridView: View {
         case .ratingView(let photo):
             RatingView(activeSheet: $activeSheet, photo: photo)
 
-        case .participantView(let share):
+        case .participantView(let share): // custom view for watchOS, because UICloudSharingController is iOS only
             ParticipantView(activeSheet: $activeSheet, share: share)
         }
     }
@@ -202,6 +204,7 @@ struct PhotoGridView: View {
     /**
      Merge the transactions, if any.
      */
+    // Merge incoming transactions
     private func processStoreChangeNotification(_ notification: Notification) {
         let transactions = persistenceController.photoTransactions(from: notification)
         if !transactions.isEmpty {

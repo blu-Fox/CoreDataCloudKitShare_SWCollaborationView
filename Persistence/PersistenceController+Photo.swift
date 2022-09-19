@@ -4,13 +4,15 @@ See LICENSE folder for this sample’s licensing information.
 Abstract:
 An extension that wraps the related methods for managing photos.
 */
-
+#warning("LOGIC: This file contains the function to get a list of transactions relating to photos. Useful for merging them together, so main view (with multiple photos is not confused when it gets multiple notifications.")
 import Foundation
 import CoreData
 
 // MARK: - Convenient methods for managing photos.
 //
 extension PersistenceController {
+
+    // Standard function for adding data into Core Data
     func addPhoto(photoData: Data, thumbnailData: Data, tagNames: [String] = [], context: NSManagedObjectContext) {
         context.perform {
             let photo = Photo(context: context)
@@ -43,7 +45,8 @@ extension PersistenceController {
             }
         }
     }
-    
+
+    // Function to get a list of transactions relating to photos. This is used to merge incoming transactions in the main view, since we might be getting transactions for multiple photos at once.
     func photoTransactions(from notification: Notification) -> [NSPersistentHistoryTransaction] {
         var results = [NSPersistentHistoryTransaction]()
         if let transactions = notification.userInfo?[UserInfoKey.transactions] as? [NSPersistentHistoryTransaction] {

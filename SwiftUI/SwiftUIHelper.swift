@@ -26,6 +26,8 @@ extension Color {
     }
 }
 
+#warning("UI: Publisher of changes to the store that the UI can listen to.")
+// Publisher of notification changes
 extension NotificationCenter {
     var storeDidChangePublisher: Publishers.ReceiveOn<NotificationCenter.Publisher, DispatchQueue> {
         return publisher(for: .cdcksStoreDidChange).receive(on: DispatchQueue.main)

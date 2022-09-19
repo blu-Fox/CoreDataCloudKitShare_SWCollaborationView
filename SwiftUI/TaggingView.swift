@@ -4,6 +4,7 @@ See LICENSE folder for this sample’s licensing information.
 Abstract:
 A SwiftUI view that manages photo tagging.
 */
+#warning("UI: UI listens to a possible remote deletion of the record, and updates accordingly.")
 
 import SwiftUI
 import CoreData
@@ -16,9 +17,9 @@ struct TaggingView: View {
 
     private let photo: Photo
     /**
-     Retrieving the photo's persistent store (photo.persistentStore) is expensive, so cache it with a member variable
-     and provide it to FilteredTagList because FilteredTagList refreshes frequently when the user inputs.
+     Retrieving the photo's persistent store (photo.persistentStore) is expensive, so cache it with a member variable and provide it to FilteredTagList because FilteredTagList refreshes frequently when the user inputs.
      */
+#warning("UI: Notice how expensive downloads are done by the parent TaggingView. If the child FilteredTagList refreshes often (as is the case here), this will not affect a longer operation in the parent TaggingView.")
     private let affectedStore: NSPersistentStore?
 
     init(activeSheet: Binding<ActiveSheet?>, photo: Photo) {
@@ -31,6 +32,7 @@ struct TaggingView: View {
     var body: some View {
         NavigationView {
             VStack {
+                // Different UI if photo is deleted remotely, which might happen.
                 if wasPhotoDeleted {
                     Text("The photo was deleted remotely.").padding()
                     Spacer()
@@ -46,6 +48,7 @@ struct TaggingView: View {
             .listStyle(.plain)
             .navigationTitle("Tags")
         }
+        // Listen to changes. In case photo was deleted, update the UI.
         .onReceive(NotificationCenter.default.storeDidChangePublisher) { _ in
             wasPhotoDeleted = photo.isDeleted
         }
@@ -115,7 +118,7 @@ struct FilteredTagList: View {
             }
         }
     }
-    
+  
     @ViewBuilder
     private func sectionHeader() -> some View {
         if canUpdate {
@@ -189,7 +192,8 @@ struct TagListHeader: View {
         .padding(5)
         .background(Color.listHeaderBackground)
     }
-    
+  
+  // The communication with the container (adding/removing) is the same everywhere. 1) update UI, 2) async function to shareObject or purge, 3) update UI, 4) close sheet. 0.1 second delay is to allow UI to update, before we execute our logic.
     private func addTag() {
         guard !filterTagName.isEmpty else {
             return

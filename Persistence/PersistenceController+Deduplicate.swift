@@ -4,7 +4,7 @@ See LICENSE folder for this sample’s licensing information.
 Abstract:
 An extension that wraps the related methods for deduplicating tags.
 */
-
+#warning("LOGIC: The idea here is that we can add tags into different photos. But in the end, tags with the same name should be unified into a single tag (kind of like unique constraints in CD. That way, searching for a specific tag finds all photos with that tag. We don't need this for Rostou at the moment.")
 import CoreData
 import CloudKit
 

@@ -4,6 +4,7 @@ See LICENSE folder for this sample’s licensing information.
 Abstract:
 A SwiftUI view that manages the actions on a photo.
 */
+#warning("UI: Refresh UI when we detect a store change. Maybe we already do this with the iCloud sync indicator?")
 
 import SwiftUI
 import CoreData
@@ -39,11 +40,13 @@ struct PhotoContextMenu: View {
                 ProgressView()
             }
         }
+        // listen to notification
         .onReceive(NotificationCenter.default.storeDidChangePublisher) { notification in
             processStoreChangeNotification(notification)
         }
     }
-    
+
+  #warning("UI: Important part of UI for managing participation. If the finding is in the private database, allow creating a new share, or adding to an existing share (so we reuse existing zones). If the finding is in the shared database already, allow for managing the share.")
     @ViewBuilder
     private func menuButtons() -> some View {
         /**
@@ -81,6 +84,8 @@ struct PhotoContextMenu: View {
      Use UICloudSharingController to manage the share in iOS.
      In watchOS, UICloudSharingController is unavailable, so create the share using Core Data API.
      */
+#warning("UI: Custom sheets for watchOS, since UICloudSharingController is only available on iOS")
+
     #if os(iOS)
     private func createNewShare(photo: Photo) {
          PersistenceController.shared.presentCloudSharingController(photo: photo)
@@ -95,6 +100,7 @@ struct PhotoContextMenu: View {
      Sharing a photo can take a while, so dispatch to a global queue so SwiftUI has a chance to show the progress view.
      @State variables are thread-safe, so there's no need to dispatch back the main queue.
      */
+  // The communication with the container (adding/removing) is the same everywhere. 1) update UI, 2) async function to shareObject or purge, 3) update UI, 4) close sheet. 0.1 second delay is to allow UI to update, before we execute our logic.
     private func createNewShare(photo: Photo) {
         toggleProgress.toggle()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
@@ -120,15 +126,20 @@ struct PhotoContextMenu: View {
      - It doesn't have a transaction. When a share changes, Core Data triggers a store remote change notification with no transaction.
      */
     private func processStoreChangeNotification(_ notification: Notification) {
+        // Return if change happened in shared database. We are only interested in changes in the private database.
         guard let storeUUID = notification.userInfo?[UserInfoKey.storeUUID] as? String,
               storeUUID == PersistenceController.shared.privatePersistentStore.identifier else {
             return
         }
+        // Return if the transaction is not empty. An empty transaction means the share was changed or deleted.
         guard let transactions = notification.userInfo?[UserInfoKey.transactions] as? [NSPersistentHistoryTransaction],
               transactions.isEmpty else {
             return
         }
+        // We now have a share in the private store that was changed or deleted.
+        // Update UI so we know if the photo is still shared
         isPhotoShared = (PersistenceController.shared.existingShare(photo: photo) != nil)
+        // Update UI to see if there are any shares at all. If not, the "Add to existing share" button is redundant.
         hasAnyShare = PersistenceController.shared.shareTitles().isEmpty ? false : true
     }
 }

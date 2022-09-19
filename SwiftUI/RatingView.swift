@@ -4,6 +4,7 @@ See LICENSE folder for this sample’s licensing information.
 Abstract:
 A SwiftUI view that manages photo ratings.
 */
+#warning("UI: Similar to tagging view: we should notice updates, and if the record is deleted, the UI should reflect this.")
 
 import SwiftUI
 import CoreData
@@ -37,6 +38,7 @@ struct RatingView: View {
     var body: some View {
         NavigationView {
             VStack {
+                // Different UI in case photo was deleted.
                 if wasPhotoDeleted {
                     Text("The photo for rating was deleted remotely.").padding()
                     Spacer()
@@ -52,6 +54,7 @@ struct RatingView: View {
             .listStyle(.plain)
             .navigationTitle("Ratings")
         }
+        // Listen to changes in the store
         .onReceive(NotificationCenter.default.storeDidChangePublisher) { _ in
             wasPhotoDeleted = photo.isDeleted
         }
@@ -142,6 +145,7 @@ struct RatingListHeader: View {
      Toggle the progress view.
      DispatchQueue.main.asyncAfter(deadline: .now() + 0.1): Allow 0.1 second to show the progress view.
      */
+  // The communication with the container (adding/removing) is the same everywhere. 1) update UI, 2) async function to shareObject or purge, 3) update UI, 4) close sheet. 0.1 second delay is to allow UI to update, before we execute our logic.
     private func addRating() {
         toggleProgress.toggle()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {

@@ -4,6 +4,7 @@ See LICENSE folder for this sample’s licensing information.
 Abstract:
 A SwiftUI view that picks an existing share.
 */
+#warning("UI: UI listens to store change notifications and updates when needed. See comments in code. Maybe we already do this when we show the indicator that iCloud is updating?")
 
 import SwiftUI
 import CoreData
@@ -25,6 +26,7 @@ struct SharePickerView<ActionView: View>: View {
     var body: some View {
         NavigationView {
             VStack {
+              // Different UI if there is no share to be shown (it may have been deleted remotely while we have this open.
                if shareTitles.isEmpty {
                    Text("No share exists. Please create a new share for a photo, then try again.").padding()
                    Spacer()
@@ -47,6 +49,7 @@ struct SharePickerView<ActionView: View>: View {
             .listStyle(.plain)
             .navigationTitle("Shares")
         }
+        // Listen to notifications
         .onReceive(NotificationCenter.default.storeDidChangePublisher) { notification in
             processStoreChangeNotification(notification)
         }
@@ -58,14 +61,17 @@ struct SharePickerView<ActionView: View>: View {
      - The notification transaction isn't empty. When a share changes, Core Data triggers a store remote change notification with no transaction.
      */
     private func processStoreChangeNotification(_ notification: Notification) {
+        // Return if the change relates to the shared database. We are only interested in the private database.
         guard let storeUUID = notification.userInfo?[UserInfoKey.storeUUID] as? String,
               storeUUID == PersistenceController.shared.privatePersistentStore.identifier else {
             return
         }
+        // Return if the transaction is not empty. An empty translation means a change or deletion of the share.
         guard let transactions = notification.userInfo?[UserInfoKey.transactions] as? [NSPersistentHistoryTransaction],
               transactions.isEmpty else {
             return
         }
+        // If we have a notification from the private database with an empty transaction, update the list of shares.
         shareTitles = PersistenceController.shared.shareTitles()
     }
 

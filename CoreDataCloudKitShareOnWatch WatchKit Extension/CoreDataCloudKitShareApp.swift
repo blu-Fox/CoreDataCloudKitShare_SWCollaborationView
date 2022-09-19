@@ -4,6 +4,7 @@ See LICENSE folder for this sample’s licensing information.
 Abstract:
 The SwiftUI app for watchOS.
 */
+#warning("LOGIC: Implement a delegate so shares can be accepted on the watch. With Xcode 14, change into WKApplicationDelegateAdaptor.")
 
 import SwiftUI
 

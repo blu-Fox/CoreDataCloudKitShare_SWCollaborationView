@@ -4,6 +4,7 @@ See LICENSE folder for this sample’s licensing information.
 Abstract:
 The SwiftUI app for iOS.
 */
+#warning("LOGIC: The app has a different function when initializing the CloudKit schema")
 
 import SwiftUI
 import CoreData
@@ -14,6 +15,7 @@ struct CoreDataCloudKitShareApp: App {
     private let persistentContainer = PersistenceController.shared.persistentContainer
 
     var body: some Scene {
+
         #if InitializeCloudKitSchema
         WindowGroup {
             Text("Initializing CloudKit Schema...").font(.title)

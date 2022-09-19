@@ -4,33 +4,42 @@ See LICENSE folder for this sample’s licensing information.
 Abstract:
 A class that sets up the Core Data stack.
 */
+#warning("LOGIC: The Core Data stack. Lots of important parts here. Comments were added.")
 
 import Foundation
 import CoreData
 import CloudKit
 import SwiftUI
 
+// Single declaration of identifier
 let gCloudKitContainerIdentifier = "iCloud.apps.janstehlik.CoreDataCloudKitShareSample"
 
 /**
  This app doesn't necessarily post notifications from the main queue.
  */
+// Name of notification informing listeners that store history changed.
 extension Notification.Name {
     static let cdcksStoreDidChange = Notification.Name("cdcksStoreDidChange")
 }
 
+// Name of fields in the history tracking. We are showing the name of the store, and the list of transactions.
 struct UserInfoKey {
     static let storeUUID = "storeUUID"
     static let transactions = "transactions"
 }
 
+// Name of transactions made in this app (as opposed to remotely.
 struct TransactionAuthor {
     static let app = "app"
 }
 
+// The core data stack
 class PersistenceController: NSObject, ObservableObject {
+
+    // Singleton
     static let shared = PersistenceController()
 
+    // Lazy loaded container
     lazy var persistentContainer: NSPersistentCloudKitContainer = {
         /**
          Prepare the containing folder for the Core Data stores.
@@ -41,6 +50,7 @@ class PersistenceController: NSObject, ObservableObject {
         let privateStoreFolderURL = storeFolderURL.appendingPathComponent("Private")
         let sharedStoreFolderURL = storeFolderURL.appendingPathComponent("Shared")
 
+        // The sample app establishes folders for each store. We did not do this initially, so I suppose doing it now could break things.
         let fileManager = FileManager.default
         for folderURL in [privateStoreFolderURL, sharedStoreFolderURL] where !fileManager.fileExists(atPath: folderURL.path) {
             do {
@@ -106,6 +116,7 @@ class PersistenceController: NSObject, ObservableObject {
          Run initializeCloudKitSchema() once to update the CloudKit schema every time you change the Core Data model.
          Don't call this code in the production environment.
          */
+        // Init cloudKitSchema when we change the model. This will establish our schema for production.
         #if InitializeCloudKitSchema
         do {
             try container.initializeCloudKitSchema()
@@ -136,9 +147,11 @@ class PersistenceController: NSObject, ObservableObject {
          - The .NSManagedObjectContextDidSave notifications from any context.
          - The event change notifications from the container.
          */
+        // Observe remote changes to a store. When we detect a change, run the specified storeRemoteChange function, which processes persistent history.
         NotificationCenter.default.addObserver(self, selector: #selector(storeRemoteChange(_:)),
                                                name: .NSPersistentStoreRemoteChange,
                                                object: container.persistentStoreCoordinator)
+        // Observe event changes from the container. When we detect a change, run the specified containerEventChanged function, which notifies us that some activity took place.
         NotificationCenter.default.addObserver(self, selector: #selector(containerEventChanged(_:)),
                                                name: NSPersistentCloudKitContainer.eventChangedNotification,
                                                object: container)
@@ -155,7 +168,8 @@ class PersistenceController: NSObject, ObservableObject {
     var sharedPersistentStore: NSPersistentStore {
         return _sharedPersistentStore!
     }
-    
+
+    // Needed to present UICloudSharingController
     lazy var cloudKitContainer: CKContainer = {
         return CKContainer(identifier: gCloudKitContainerIdentifier)
     }()
@@ -163,6 +177,7 @@ class PersistenceController: NSObject, ObservableObject {
     /**
      An operation queue for handling history-processing tasks: watching changes, deduplicating tags, and triggering UI updates, if needed.
      */
+    // As above
     lazy var historyQueue: OperationQueue = {
         let queue = OperationQueue()
         queue.maxConcurrentOperationCount = 1
