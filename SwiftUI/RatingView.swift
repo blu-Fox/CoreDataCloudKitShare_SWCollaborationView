@@ -4,7 +4,8 @@ See LICENSE folder for this sample’s licensing information.
 Abstract:
 A SwiftUI view that manages photo ratings.
 */
-#warning("UI: Similar to tagging view: we should notice updates, and if the record is deleted, the UI should reflect this.")
+
+// Similar to tagging view: we should notice updates, and if the record is deleted, the UI should reflect this.
 
 import SwiftUI
 import CoreData

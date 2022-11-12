@@ -4,7 +4,7 @@ See LICENSE folder for this sample’s licensing information.
 Abstract:
 A SwiftUI view that manages a photo collection.
 */
-#warning("UI: We show multiple records here, so it's good to merge possible incoming transactions")
+// UI: We show multiple records here, so it's good to merge possible incoming transactions
 
 import SwiftUI
 import CoreData
@@ -54,9 +54,8 @@ enum ActiveCover: Identifiable, Equatable {
 
 struct PhotoGridView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @FetchRequest(sortDescriptors: [SortDescriptor(\.uniqueName)],
-                  animation: .default
-    ) private var photos: FetchedResults<Photo>
+    @FetchRequest(sortDescriptors: [SortDescriptor(\.uniqueName)], animation: .default)
+  private var photos: FetchedResults<Photo>
 
     @State private var activeSheet: ActiveSheet?
     @State private var activeCover: ActiveCover?
@@ -102,7 +101,8 @@ struct PhotoGridView: View {
             processStoreChangeNotification(notification)
         }
     }
-    
+
+    // individual item in the grid
     @ViewBuilder
     private func gridItemView(photo: Photo, itemSize: CGSize) -> some View {
         #if os(iOS)
@@ -121,6 +121,7 @@ struct PhotoGridView: View {
         #endif
     }
 
+    // buttons
     @ToolbarContentBuilder
     private func toolbarItems() -> some ToolbarContent {
         #if os(iOS)

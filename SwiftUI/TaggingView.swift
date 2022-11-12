@@ -4,8 +4,8 @@ See LICENSE folder for this sample’s licensing information.
 Abstract:
 A SwiftUI view that manages photo tagging.
 */
-#warning("UI: UI listens to a possible remote deletion of the record, and updates accordingly.")
 
+// UI listens to a possible remote deletion of the record, and updates accordingly.
 import SwiftUI
 import CoreData
 
@@ -19,7 +19,7 @@ struct TaggingView: View {
     /**
      Retrieving the photo's persistent store (photo.persistentStore) is expensive, so cache it with a member variable and provide it to FilteredTagList because FilteredTagList refreshes frequently when the user inputs.
      */
-#warning("UI: Notice how expensive downloads are done by the parent TaggingView. If the child FilteredTagList refreshes often (as is the case here), this will not affect a longer operation in the parent TaggingView.")
+// UI: Notice how expensive downloads are done by the parent TaggingView. If the child FilteredTagList refreshes often (as is the case here), this will not affect a longer operation in the parent TaggingView.
     private let affectedStore: NSPersistentStore?
 
     init(activeSheet: Binding<ActiveSheet?>, photo: Photo) {

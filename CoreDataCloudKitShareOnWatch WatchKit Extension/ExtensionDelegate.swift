@@ -4,7 +4,7 @@ See LICENSE folder for this sample’s licensing information.
 Abstract:
 The WatchKit extension delegate class.
 */
-#warning("LOGIC: Delegate that allows accepting a share on the Watch. With Xcode 14, it should be renamed from WKExtensionDelegate to WKApplicationDelegate")
+// LOGIC: Delegate that allows accepting a share on the Watch. With Xcode 14, it should be renamed from WKExtensionDelegate to WKApplicationDelegate
 import WatchKit
 import CloudKit
 

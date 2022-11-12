@@ -4,7 +4,7 @@ See LICENSE folder for this sample’s licensing information.
 Abstract:
 Extensions that add convenience methods to Core Data.
 */
-#warning("LOGIC: Some useful helper functions. See comments above each one.")
+// Some useful helper functions. See comments above each one.
 
 import CoreData
 import CloudKit

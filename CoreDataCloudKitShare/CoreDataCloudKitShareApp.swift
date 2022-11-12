@@ -4,7 +4,7 @@ See LICENSE folder for this sample’s licensing information.
 Abstract:
 The SwiftUI app for iOS.
 */
-#warning("LOGIC: The app has a different function when initializing the CloudKit schema")
+#warning("This app demonstrates Core Data + CloudKit sharing in SwiftUI. Comments were added throughout the code to explain it better. The CK container is 'iCloud.apps.janstehlik.CoreDataCloudKitShareSample'. It is saved in Finder under 'SharingCoreDataObjectsBetweenICloudUsers'. However, watch out - there is currently some bug that prevents re-opening UICloudSharingController. Need to investigate.")
 
 import SwiftUI
 import CoreData

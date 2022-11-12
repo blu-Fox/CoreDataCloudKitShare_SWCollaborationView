@@ -34,7 +34,7 @@ struct PhotoGridItemView: View {
         .background(Color.gridItemBackground)
     }
 
-  #warning("UI: If the shared store contains this photo, show an indicator. Compare how this is achieved in the RayW tutorial.")
+// UI: If the shared store contains this photo, show an indicator. Compare how this is achieved in the RayW tutorial.
     @ViewBuilder
     private func topLeftButton() -> some View {
         if persistenceController.sharedPersistentStore.contains(manageObject: photo) {

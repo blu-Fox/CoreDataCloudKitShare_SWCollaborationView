@@ -4,7 +4,7 @@ See LICENSE folder for this sample’s licensing information.
 Abstract:
 A SwiftUI view that picks an existing share.
 */
-#warning("UI: UI listens to store change notifications and updates when needed. See comments in code. Maybe we already do this when we show the indicator that iCloud is updating?")
+// UI: UI listens to store change notifications and updates when needed. See comments in code. Maybe we already do this when we show the indicator that iCloud is updating?
 
 import SwiftUI
 import CoreData

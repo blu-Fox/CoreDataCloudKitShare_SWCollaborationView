@@ -4,7 +4,7 @@ See LICENSE folder for this sample’s licensing information.
 Abstract:
 A SwiftUI view that adds a photo to an existing share.
 */
-#warning("UI: The communication between UI and the container (adding/removing) is the same everywhere. 1) update UI, 2) async function to shareObject or purge, 3) update UI, 4) close sheet")
+// UI: The communication between UI and the container (adding/removing) is the same everywhere. 1) update UI, 2) async function to shareObject or purge, 3) update UI, 4) close sheet
 
 import SwiftUI
 import CoreData

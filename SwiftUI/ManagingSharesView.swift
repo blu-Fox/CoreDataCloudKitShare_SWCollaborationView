@@ -4,7 +4,7 @@ See LICENSE folder for this sample’s licensing information.
 Abstract:
 A SwiftUI view that manages existing shares.
 */
-#warning("UI watchOS: Sheet for managing shares, compatible with watchOS")
+// UI: Sheet for managing shares, compatible with watchOS
 
 import SwiftUI
 import CoreData
@@ -65,6 +65,7 @@ struct ManagingSharesView: View {
     }
   
   // The communication with the container (adding/removing) is the same everywhere. 1) update UI, 2) async function to shareObject or purge, 3) update UI, 4) close sheet. 0.1 second delay is to allow UI to update, before we execute our logic.
+  // This removes the user from the selected shared ZONE. This is not ideal for removing a specific finding, because a single zone can contain multiple findings!
     private func purgeShare(_ share: CKShare, in persistentStore: NSPersistentStore?) {
         toggleProgress.toggle()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {

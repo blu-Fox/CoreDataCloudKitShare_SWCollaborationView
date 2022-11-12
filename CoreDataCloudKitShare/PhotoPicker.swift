@@ -42,7 +42,7 @@ class PhotoPickerCoordinator: PHPickerViewControllerDelegate {
         for result in results {
             result.itemProvider.loadObject(ofClass: UIImage.self) { (object, error) in
                 guard let image = object as? UIImage else {
-                    print("Failed to load UIImage from the picker reuslt.")
+                    print("Failed to load UIImage from the picker result.")
                     return
                 }
                 self.saveImage(image)

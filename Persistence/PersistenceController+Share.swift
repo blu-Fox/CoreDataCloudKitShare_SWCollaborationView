@@ -4,7 +4,7 @@ See LICENSE folder for this sample’s licensing information.
 Abstract:
 Extensions that wrap the related methods for sharing.
 */
-#warning("LOGIC: Important functions relating to the creation and deletion of shares and participants.")
+// LOGIC: Important functions relating to the creation and deletion of shares and participants.
 
 import Foundation
 import CoreData
@@ -131,7 +131,7 @@ extension PersistenceController: UICloudSharingControllerDelegate {
     }
     
     func itemTitle(for csc: UICloudSharingController) -> String? {
-        return csc.share?.title ?? "A cool photo"
+        return csc.share?.title ?? "A cool photo 1"
     }
 }
 #endif
@@ -221,7 +221,7 @@ extension PersistenceController {
 
     // Default share configuration
     private func configure(share: CKShare, with photo: Photo? = nil) {
-        share[CKShare.SystemFieldKey.title] = "A cool photo"
+        share[CKShare.SystemFieldKey.title] = "A cool photo 2"
     }
 }
 

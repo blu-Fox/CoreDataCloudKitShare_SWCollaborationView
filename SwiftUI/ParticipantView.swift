@@ -4,7 +4,7 @@ See LICENSE folder for this sample’s licensing information.
 Abstract:
 A SwiftUI view that manages the participants of a share.
 */
-#warning("UI: An important view for showing participants to a shared object. Comments were added for faster adoption. On iOS, we can open the Controller. On watchOS, the Controller is unavailable, so we can use this custom view.")
+// UI: An important view for showing participants to a shared object. Comments were added for faster adoption. On iOS, we can open the Controller. On watchOS, the Controller is unavailable, so we can use this custom view.
 
 import SwiftUI
 import CoreData

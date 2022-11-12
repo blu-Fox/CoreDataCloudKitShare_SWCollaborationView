@@ -4,7 +4,7 @@ See LICENSE folder for this sample’s licensing information.
 Abstract:
 A class that sets up the Core Data stack.
 */
-#warning("LOGIC: The Core Data stack. Lots of important parts here. Comments were added.")
+// LOGIC: The Core Data stack. Lots of important parts here. Comments were added.
 
 import Foundation
 import CoreData

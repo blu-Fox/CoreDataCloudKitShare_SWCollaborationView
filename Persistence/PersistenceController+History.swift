@@ -4,7 +4,7 @@ See LICENSE folder for this sample’s licensing information.
 Abstract:
 Extensions that wrap the related methods for persistence history processing.
 */
-#warning("LOGIC: Important file for tracking and processing persistence history.")
+// LOGIC: Important file for tracking and processing persistence history.
 import CoreData
 import CloudKit
 

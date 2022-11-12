@@ -4,7 +4,7 @@ See LICENSE folder for this sample’s licensing information.
 Abstract:
 A SwiftUI view that manages the actions on a photo.
 */
-#warning("UI: Refresh UI when we detect a store change. Maybe we already do this with the iCloud sync indicator?")
+// UI: Refresh UI when we detect a store change. Maybe we already do this with the iCloud sync indicator?
 
 import SwiftUI
 import CoreData
@@ -46,7 +46,7 @@ struct PhotoContextMenu: View {
         }
     }
 
-  #warning("UI: Important part of UI for managing participation. If the finding is in the private database, allow creating a new share, or adding to an existing share (so we reuse existing zones). If the finding is in the shared database already, allow for managing the share.")
+// UI: Important part of UI for managing participation. If the finding is in the private database, allow creating a new share, or adding to an existing share (so we reuse existing zones). If the finding is in the shared database already, allow for managing the share.
     @ViewBuilder
     private func menuButtons() -> some View {
         /**
@@ -84,7 +84,7 @@ struct PhotoContextMenu: View {
      Use UICloudSharingController to manage the share in iOS.
      In watchOS, UICloudSharingController is unavailable, so create the share using Core Data API.
      */
-#warning("UI: Custom sheets for watchOS, since UICloudSharingController is only available on iOS")
+// UI: Custom sheets for watchOS, since UICloudSharingController is only available on iOS
 
     #if os(iOS)
     private func createNewShare(photo: Photo) {
@@ -100,7 +100,7 @@ struct PhotoContextMenu: View {
      Sharing a photo can take a while, so dispatch to a global queue so SwiftUI has a chance to show the progress view.
      @State variables are thread-safe, so there's no need to dispatch back the main queue.
      */
-  // The communication with the container (adding/removing) is the same everywhere. 1) update UI, 2) async function to shareObject or purge, 3) update UI, 4) close sheet. 0.1 second delay is to allow UI to update, before we execute our logic.
+    // The communication with the container (adding/removing) is the same everywhere. 1) update UI, 2) async function to shareObject or purge, 3) update UI, 4) close sheet. 0.1 second delay is to allow UI to update, before we execute our logic.
     private func createNewShare(photo: Photo) {
         toggleProgress.toggle()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
