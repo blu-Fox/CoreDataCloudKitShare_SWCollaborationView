@@ -92,7 +92,8 @@ struct PhotoContextMenu: View {
     }
     
     private func manageParticipation(photo: Photo) {
-        PersistenceController.shared.presentCloudSharingController(photo: photo)
+      /// Apple impelmentation (bugged in iOS16):
+      ///   PersistenceController.shared.presentCloudSharingController(photo: photo)
     }
     
     #elseif os(watchOS)

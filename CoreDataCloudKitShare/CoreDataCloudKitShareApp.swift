@@ -4,7 +4,7 @@ See LICENSE folder for this sample’s licensing information.
 Abstract:
 The SwiftUI app for iOS.
 */
-#warning("This app demonstrates Core Data + CloudKit sharing in SwiftUI. Comments were added throughout the code to explain it better. The CK container is 'iCloud.apps.janstehlik.CoreDataCloudKitShareSample'. It is saved in Finder under 'SharingCoreDataObjectsBetweenICloudUsers'. However, watch out - there is currently some bug that prevents re-opening UICloudSharingController. Need to investigate.")
+#warning("This app demonstrates Core Data + CloudKit sharing in SwiftUI. Comments were added throughout the code to explain it better. The CK container is 'iCloud.apps.janstehlik.CoreDataCloudKitShareSample'. The very similar looking container 'iCloud.apps.janstehlik.CoreDataCloudKitShare' belonged to an earlier version of this sample app downloaded from the internet, before it was published by Apple. Watch out - there is currently some bug that prevents re-opening UICloudSharingController. Need to investigate.")
 
 import SwiftUI
 import CoreData
