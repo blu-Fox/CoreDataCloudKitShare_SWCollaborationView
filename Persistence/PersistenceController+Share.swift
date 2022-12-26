@@ -14,7 +14,21 @@ import CloudKit
 #if os(iOS) // UICloudSharingController is only available in iOS.
 // MARK: - Convenient methods for managing sharing.
 //
+import SharedWithYou
+
 extension PersistenceController {
+
+  func createNewShare(unsharedPhoto: Photo) async -> CKShare? {
+    do {
+      let (_, share, _) = try await self.persistentContainer.share([unsharedPhoto], to: nil)
+      // unused: set, container
+      configure(share: share)
+      return share
+    } catch {
+      print("PersistenceController.createNewShare: Error creating share")
+      return nil
+    }
+  }
 
   // Function to present the cloudsharing controller for a photo, which may or may not be already shared.
   func presentCloudSharingController(photo: Photo) {
@@ -27,23 +41,44 @@ extension PersistenceController {
     }
 
     // Initiate UICloudSharingController
-    let sharingController: UICloudSharingController
-    if photoShare == nil {
-      print("NEW SHARE")
-      sharingController = newSharingController(unsharedPhoto: photo, persistenceController: self)
+    // Bugged out in iOS16 when showing an existing share
+//    let sharingController: UICloudSharingController
+//    if photoShare == nil {
+//      print("NEW SHARE")
+//      sharingController = newSharingController(unsharedPhoto: photo, persistenceController: self)
+//    } else {
+//      /// WARNING: A confirmed bug appears here. UICloudSharingController does not work for existing shares in iOS16.
+//      /// A DTS has been opened.
+//      /// Also look into replacing UICloudSharingController with UIActivityViewController+SWCollaborationView or ShareLink+SWCollaborationView
+//      print("EXISTING SHARE NAMED: \(photoShare!.title)")
+//      sharingController = UICloudSharingController(share: photoShare!, container: cloudKitContainer)
+//    }
+//    // Add delegate
+//    sharingController.delegate = self
+//    // Present UICloudSharingController as a sheet. Set the presentation style to .formSheet so there's no need to specify sourceView, sourceItem, or sourceRect.
+//    if let viewController = rootViewController {
+//      sharingController.modalPresentationStyle = .formSheet
+//      viewController.present(sharingController, animated: true)
+//    }
+
+    // New implementation
+    if let share = photoShare {
+      print("EXISTING SHARE NAMED: \(share.title)")
+      let itemProvider = NSItemProvider()
+      itemProvider.registerCKShare(share, container: cloudKitContainer, allowedSharingOptions: .standard)
+      let collaborationView = SWCollaborationView(itemProvider: itemProvider)
+      collaborationView.activeParticipantCount = share.participants.count
+      collaborationView.setShowManageButton(true)
+      collaborationView.cloudSharingControllerDelegate = self
     } else {
-      /// WARNING: A confirmed bug appears here. UICloudSharingController does not work for existing shares in iOS16.
-      /// A DTS has been opened.
-      /// Also look into replacing UICloudSharingController with UIActivityViewController+SWCollaborationView or ShareLink+SWCollaborationView
-      print("EXISTING SHARE NAMED: \(photoShare!.title)")
-      sharingController = UICloudSharingController(share: photoShare!, container: cloudKitContainer)
-    }
-    // Add delegate
-    sharingController.delegate = self
-    // Present UICloudSharingController as a sheet. Set the presentation style to .formSheet so there's no need to specify sourceView, sourceItem, or sourceRect.
-    if let viewController = rootViewController {
-      sharingController.modalPresentationStyle = .formSheet
-      viewController.present(sharingController, animated: true)
+      print("NEW SHARE")
+      let sharingController: UICloudSharingController
+      sharingController = newSharingController(unsharedPhoto: photo, persistenceController: self)
+      sharingController.delegate = self
+      if let viewController = rootViewController {
+        sharingController.modalPresentationStyle = .formSheet
+        viewController.present(sharingController, animated: true)
+      }
     }
   }
 

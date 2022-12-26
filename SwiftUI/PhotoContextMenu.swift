@@ -48,20 +48,19 @@ struct PhotoContextMenu: View {
 
 // UI: Important part of UI for managing participation. If the finding is in the private database, allow creating a new share, or adding to an existing share (so we reuse existing zones). If the finding is in the shared database already, allow for managing the share.
     @ViewBuilder
-    private func menuButtons() -> some View {
-        /**
-         For photos in the private database, allow creating a new share or adding to an existing share.
-         For photos in the shared database, allow managing participation.
-         */
-        if PersistenceController.shared.privatePersistentStore.contains(manageObject: photo) {
-            Button("Create New Share") { createNewShare(photo: photo) }
-            .disabled(isPhotoShared)
-            
-            Button("Add to Existing Share") { activeSheet = .sharePicker(photo) }
-            .disabled(isPhotoShared || !hasAnyShare)
-        } else {
-            Button("Manage Participation") { manageParticipation(photo: photo) }
-        }
+  private func menuButtons() -> some View {
+
+    if PersistenceController.shared.existingShare(photo: photo) != nil {
+      Button("Manage Participation") { manageParticipation(photo: photo) }
+    } else {
+      Button("Create New Share") { createNewShare(photo: photo) }
+      .disabled(isPhotoShared)
+
+      Button("Add to Existing Share") { activeSheet = .sharePicker(photo) }
+      .disabled(isPhotoShared || !hasAnyShare)
+    }
+
+
         /**
         Tagging and rating.
          */
@@ -144,3 +143,20 @@ struct PhotoContextMenu: View {
         hasAnyShare = PersistenceController.shared.shareTitles().isEmpty ? false : true
     }
 }
+
+
+
+// For new share
+//print("NEW SHARE")
+//let itemProvider = NSItemProvider()
+//itemProvider.registerCKShare(container: controller.cloudKitContainer) {
+//  guard let share = await controller.createNewShare(unsharedPhoto: photo) else {
+//    fatalError("Error registering share")
+//  }
+//  return share
+//}
+//let collaborationView = SWCollaborationView(itemProvider: itemProvider)
+//collaborationView.setShowManageButton(true)
+//collaborationView.cloudSharingControllerDelegate = controller
+//return collaborationView
+
