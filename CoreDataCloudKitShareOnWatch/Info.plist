@@ -4,7 +4,5 @@
 <dict>
 	<key>CKSharingSupported</key>
 	<true/>
-	<key>WKCompanionAppBundleIdentifier</key>
-	<string>apps.janstehlik.CoreDataCloudKitShareSample</string>
 </dict>
 </plist>

@@ -12,7 +12,7 @@ import CloudKit
 import SwiftUI
 
 // Single declaration of identifier
-let gCloudKitContainerIdentifier = "iCloud.apps.janstehlik.CoreDataCloudKitShareSample"
+let gCloudKitContainerIdentifier = "iCloud.someID"
 
 /**
  This app doesn't necessarily post notifications from the main queue.

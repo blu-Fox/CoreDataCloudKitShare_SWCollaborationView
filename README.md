@@ -9,3 +9,5 @@ It differs from the original in several ways, mainly:
 To see how `SWCollaborationView` is implemented at the moment, see files `CollaborationView` and `FullImageView`.
 
 The comments and code are quite messy at the moment - this clone only serves learning purposes, and the repo is public so others may see the issues with implementing `UICloudSharingController` and `SWCollaborationView`. Once these issues are resolved, the repo will be removed.
+
+Before running the project, change the bundle identifier and other settings as required by the original sample app.

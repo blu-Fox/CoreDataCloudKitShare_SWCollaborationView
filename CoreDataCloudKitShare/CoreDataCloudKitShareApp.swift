@@ -4,7 +4,6 @@
  Abstract:
  The SwiftUI app for iOS.
  */
-#warning("This app demonstrates Core Data + CloudKit sharing in SwiftUI. Comments were added throughout the code to explain it better. The CK container is 'iCloud.apps.janstehlik.CoreDataCloudKitShareSample'. The very similar looking container 'iCloud.apps.janstehlik.CoreDataCloudKitShare' belonged to an earlier version of this sample app downloaded from the internet, before it was published by Apple. The currently investigated issues pertain to the use of UICloudSharingController (bugged in iOS16) and SWCollaborationView (UIKit only). As a result, sharing does not work at the moment.")
 
 import SwiftUI
 import CoreData
