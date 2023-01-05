@@ -48,7 +48,7 @@ extension PersistenceController {
 //      sharingController = newSharingController(unsharedPhoto: photo, persistenceController: self)
 //    } else {
 //      /// WARNING: A confirmed bug appears here. UICloudSharingController does not work for existing shares in iOS16.
-//      /// A DTS has been opened.
+//      /// A TSI has been opened.
 //      /// Also look into replacing UICloudSharingController with UIActivityViewController+SWCollaborationView or ShareLink+SWCollaborationView
 //      print("EXISTING SHARE NAMED: \(photoShare!.title)")
 //      sharingController = UICloudSharingController(share: photoShare!, container: cloudKitContainer)
@@ -121,10 +121,10 @@ extension PersistenceController {
   private var rootViewController: UIViewController? {
     for scene in UIApplication.shared.connectedScenes {
       if scene.activationState == .foregroundActive,
-         let sceneDeleate = (scene as? UIWindowScene)?.delegate as? UIWindowSceneDelegate,
-         let window = sceneDeleate.window {
-        return window?.rootViewController
-      }
+        let sceneDeleate = (scene as? UIWindowScene)?.delegate as? UIWindowSceneDelegate,
+        let window = sceneDeleate.window {
+          return window?.rootViewController
+        }
     }
     print("\(#function): Failed to retrieve the window's root view controller.")
     return nil

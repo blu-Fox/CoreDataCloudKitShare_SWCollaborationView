@@ -60,7 +60,6 @@ struct PhotoContextMenu: View {
       .disabled(isPhotoShared || !hasAnyShare)
     }
 
-
         /**
         Tagging and rating.
          */
@@ -159,4 +158,3 @@ struct PhotoContextMenu: View {
 //collaborationView.setShowManageButton(true)
 //collaborationView.cloudSharingControllerDelegate = controller
 //return collaborationView
-

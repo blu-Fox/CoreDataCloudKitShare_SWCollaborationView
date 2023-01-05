@@ -70,6 +70,8 @@
 		40C6211E2755AFB500015301 /* SharePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C6211D2755AFB500015301 /* SharePickerView.swift */; };
 		40C6211F2755AFB500015301 /* SharePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C6211D2755AFB500015301 /* SharePickerView.swift */; };
 		40D68E942719101A00FB9B78 /* PersistenceController+Deduplicate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D68E932719101A00FB9B78 /* PersistenceController+Deduplicate.swift */; };
+		DD33E62B2966FC32002BE4FC /* CollaborationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD33E62A2966FC32002BE4FC /* CollaborationView.swift */; };
+		DD33E62C2966FC32002BE4FC /* CollaborationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD33E62A2966FC32002BE4FC /* CollaborationView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -170,6 +172,7 @@
 		40D68E932719101A00FB9B78 /* PersistenceController+Deduplicate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PersistenceController+Deduplicate.swift"; sourceTree = "<group>"; };
 		987F6E8525D5DA6A6A97A01E /* SampleCode.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SampleCode.xcconfig; path = Configuration/SampleCode.xcconfig; sourceTree = "<group>"; };
 		B24732F33201E3732F237ECB /* LICENSE.txt */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
+		DD33E62A2966FC32002BE4FC /* CollaborationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollaborationView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -222,6 +225,7 @@
 				408BD4DB2713F0F400294A81 /* ManagingSharesView.swift */,
 				40C6211D2755AFB500015301 /* SharePickerView.swift */,
 				405831692767DCDE0044E86D /* FullImageView.swift */,
+				DD33E62A2966FC32002BE4FC /* CollaborationView.swift */,
 			);
 			path = SwiftUI;
 			sourceTree = "<group>";
@@ -534,6 +538,7 @@
 				407D7CF827024EBE00D2BA90 /* CoreDataCloudKitShare.xcdatamodeld in Sources */,
 				407D7D632703A27000D2BA90 /* PhotoGridItemView.swift in Sources */,
 				40C6211E2755AFB500015301 /* SharePickerView.swift in Sources */,
+				DD33E62B2966FC32002BE4FC /* CollaborationView.swift in Sources */,
 				4026B868270A19390060F0F7 /* TaggingView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -564,6 +569,7 @@
 				403177D62742F4B40048F2DC /* PhotoGridItemView.swift in Sources */,
 				40B62023273AFD9700B27D3D /* PersistenceController+Rating.swift in Sources */,
 				403177D32742D5790048F2DC /* RatingView.swift in Sources */,
+				DD33E62C2966FC32002BE4FC /* CollaborationView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
